@@ -6,6 +6,8 @@ defmodule DemoApp.Accounts.User do
     field :name, :string
     field :email, :string
 
+    has_many :products, DemoApp.Shop.Product
+
     timestamps(type: :utc_datetime)
   end
 
