@@ -8,6 +8,8 @@ defmodule DemoApp.Accounts.User do
 
     has_many :products, DemoApp.Shop.Product
 
+    has_many :stores, DemoApp.Shop.Store
+
     timestamps(type: :utc_datetime)
   end
 

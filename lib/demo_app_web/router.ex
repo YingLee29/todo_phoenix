@@ -23,8 +23,16 @@ defmodule DemoAppWeb.Router do
     live "/users", UserLive.Index, :index
     live "/users/new", UserLive.Index, :new
     live "/users/:id/edit", UserLive.Index, :edit
+
     live "/users/:id", UserLive.Show, :show
     live "/users/:id/show/edit", UserLive.Show, :edit
+
+    live "/stores", StoreLive.Index, :index
+    live "/stores/new", StoreLive.Index, :new
+    live "/stores/:id/edit", StoreLive.Index, :edit
+
+    live "/stores/:id", StoreLive.Show, :show
+    live "/stores/:id/show/edit", StoreLive.Show, :edit
 
     # Product
     live "/products", ProductLive.Index, :index

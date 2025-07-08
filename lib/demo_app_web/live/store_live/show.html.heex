@@ -1,0 +1,26 @@
+
+<.header>
+  Store <%= @store.id %>
+  <:actions>
+    <.link patch={~p"/stores/#{@store}/edit"}>
+      <.button>Edit store</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @store.name %></:item>
+</.list>
+
+<.back navigate={~p"/stores"}>Back to stores</.back>
+
+<.modal :if={@live_action == :edit} id="store-modal" show on_cancel={JS.patch(~p"/stores/#{@store}")}>
+  <.live_component
+    module={DemoAppWeb.StoreLive.FormComponent}
+    id={@store.id}
+    title={@page_title}
+    action={@live_action}
+    store={@store}
+    patch={~p"/stores/#{@store}"}
+  />
+</.modal>
