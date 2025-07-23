@@ -8,17 +8,47 @@
         v{Application.spec(:phoenix, :vsn)}
       </p>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="/users" class="hover:text-zinc-700">
-        Users
-      </a>
-      <a href="/products" class="hover:text-zinc-700">
-        Products
-      </a>
-      <a href="/stores" class="hover:text-zinc-700">
-        Stores
-      </a>
-    </div>
+    
+    <%= if @current_user do %>
+      <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+        <a href="/users" class="hover:text-zinc-700">
+          Users
+        </a>
+        <a href="/products" class="hover:text-zinc-700">
+          Products
+        </a>
+        <a href="/stores" class="hover:text-zinc-700">
+          Stores
+        </a>
+        <div class="flex items-center gap-4 border-l border-zinc-200 pl-4">
+          <span class="text-sm text-zinc-600">
+            Xin chào, <%= @current_user.name %>!
+          </span>
+          <.link
+            href="/logout"
+            method="delete"
+            class="rounded-lg bg-zinc-100 px-2 py-1 text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:bg-zinc-200/80 active:text-zinc-900/70"
+          >
+            Đăng xuất
+          </.link>
+        </div>
+      </div>
+    <% else %>
+      <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+        <.link
+          navigate="/login"
+          class="rounded-lg bg-zinc-100 px-2 py-1 text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:bg-zinc-200/80 active:text-zinc-900/70"
+        >
+          Đăng nhập
+        </.link>
+        <.link
+          navigate="/register"
+          class="rounded-lg bg-zinc-900 px-2 py-1 text-[0.8125rem] font-semibold leading-6 text-white hover:bg-zinc-700 active:text-white/80"
+        >
+          Đăng ký
+        </.link>
+      </div>
+    <% end %>
   </div>
 </header>
 <main class="px-4 py-20 sm:px-6 lg:px-8">
