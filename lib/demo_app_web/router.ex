@@ -8,38 +8,38 @@ defmodule DemoAppWeb.Router do
     plug :put_root_layout, html: {DemoAppWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug DemoAppWeb.Plugs.Auth
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  # Authentication routes (no auth required)
+  scope "/", DemoAppWeb do
+    pipe_through [:browser, :require_unauthenticated_user]
+
+    get "/login", SessionController, :new
+    post "/login", SessionController, :create
+    get "/register", RegistrationController, :new
+    post "/register", RegistrationController, :create
+  end
+
+  # Public routes
   scope "/", DemoAppWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    delete "/logout", SessionController, :delete
+  end
 
-    # User
-    live "/users", UserLive.Index, :index
-    live "/users/new", UserLive.Index, :new
-    live "/users/:id/edit", UserLive.Index, :edit
+  # Protected routes (authentication required)
+  scope "/", DemoAppWeb do
+    pipe_through [:browser, :require_authenticated_user]
 
-    live "/users/:id", UserLive.Show, :show
-    live "/users/:id/show/edit", UserLive.Show, :edit
-
-    live "/stores", StoreLive.Index, :index
-    live "/stores/new", StoreLive.Index, :new
-    live "/stores/:id/edit", StoreLive.Index, :edit
-
-    live "/stores/:id", StoreLive.Show, :show
-    live "/stores/:id/show/edit", StoreLive.Show, :edit
-
-    # Product
-    live "/products", ProductLive.Index, :index
-    live "/products/new", ProductLive.Index, :new
-    live "/products/:id/edit", ProductLive.Index, :edit
-    live "/products/:id", ProductLive.Show, :show
-    live "/products/:id/show/edit", ProductLive.Show, :edit
+    resources "/users", UserController
+    resources "/products", ProductController
+    resources "/stores", StoreController
   end
 
   # Other scopes may use custom stacks.
@@ -62,5 +62,13 @@ defmodule DemoAppWeb.Router do
       live_dashboard "/dashboard", metrics: DemoAppWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp require_authenticated_user(conn, _opts) do
+    DemoAppWeb.Plugs.Auth.require_authenticated_user(conn, _opts)
+  end
+
+  defp require_unauthenticated_user(conn, _opts) do
+    DemoAppWeb.Plugs.Auth.require_unauthenticated_user(conn, _opts)
   end
 end
